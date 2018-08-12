@@ -1,0 +1,10 @@
+{
+  "name": "haechan-bot",
+  "version": "1.0.0",
+  "description": "sorter bot",
+  "main": "haechan.js",
+  "author": "alice#1301",
+  "dependencies": {
+    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6"
+  }
+}
