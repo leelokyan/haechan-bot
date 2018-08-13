@@ -1,4 +1,5 @@
 const Discord = require ('discord.js');
+const fs = require('fs');
 const client = new Discord.Client();
 const config = require("./auth.json");
 const prefix = config.prefix; 
@@ -25,13 +26,15 @@ client.on('message', (message) => {
        
         //args = args.splice(1);
         try {
-            let commandFile = require('./commands/${command}.js)');
-            commandfile.run(client,message,args);
+            let commandFile = require(`./commands/${cmd}.js`);
+            commandFile.run(client,message,args);
         } catch (err) 
         {
             console.error(err);
         }
      }
 });
+
+client.on("error", (e) => console.error(e));
 
 client.login(config.token);
