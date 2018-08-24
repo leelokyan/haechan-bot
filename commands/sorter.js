@@ -49,44 +49,41 @@ exports.run = (client, message, args) => {
     		if (i === pivot) continue;
     		message.channel.send(`${names[pivot]} or ${names[i]}? Enter 0 for ${names[pivot]} or 1 for ${names[i]}.`)
     		.then((msg) => {
-    			let collectedMsg; 
-    			const collector = new Discord.MessageCollector(message.channel, 
-    				m => m.author.id === message.author.id, {time: 10000 });
-    			collector.on('collect', message => {
-    				if (message.content == 1) {
-	    				result[lcount] = names[i];
-	    				lcount++;
-	    				collector.stop();
-	    				return true;
-	    			} else if (message.content == 0) {
-	    				result[rcount] = names[i];
-	    				rcount--;
-	    				collector.stop();
-	    				return true;
-	    			} else {
-	    				return false;
-	    			}
-		    			
-    			});
+    			return message.channel.awaitMessages(m => m.author.id === message.author.id, {max: 1 });
+    			
     		})
-    		.then((content) => {
-    			result[lcount] = names[pivot];
-    			names = result;
-    			quickSort(names,result,start,pivot)
-    			.then((success) => {
-    				if (success)
-    				{
-    					quickSort(names,result,pivot + 1, end);
+    		.then((collected) => {
+    			collected.forEach((value,key) => {
+    				if (value == 1) {
+    					result[lcount] = names[i];
+	    				lcount++;
+    				}
+    				else if (value == 0) {
+    					result[rcount] = names[i];
+	    				rcount--;
     				}
     				else {
-    					return false;
+
     				}
-    			})
-    			 
+    			});
     		})
     		.catch((err) => {return false;})
     		
 		}
+		
+		result[lcount] = names[pivot];
+		names = result;
+		quickSort(names,result,start,pivot)
+		.then((success) => {
+			if (success)
+			{
+				quickSort(names,result,pivot + 1, end);
+			}
+			else {
+				return false;
+			}
+		});
+    			
 		return true;
     };
     
